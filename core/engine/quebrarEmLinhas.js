@@ -5,7 +5,7 @@ export function quebrarCodigoEmArrayPorLinha(codigo) {
     let separadoPorFimDeLinha = codigo.split(';|`|´');
     let removidoEspaco = separadoPorFimDeLinha.map(s => s.trim());
     let removidoLinhasVazias = removidoEspaco.filter(s => s != '');
-    removidoLinhasVazias.forEach(l, i => {
+    removidoLinhasVazias.forEach((l, i) => {
         let linha = new Linha(l, i, []);
         arrayDeLinhas.push(linha);
     });
