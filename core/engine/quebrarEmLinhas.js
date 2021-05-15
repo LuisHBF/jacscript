@@ -1,8 +1,8 @@
-import { Linha } from './model/linha.js';
+import { Linha } from './models/linha.js';
 
 export function quebrarCodigoEmArrayPorLinha(codigo) {
     let arrayDeLinhas = [];
-    let separadoPorFimDeLinha = codigo.split(';|`|´');
+    let separadoPorFimDeLinha = codigo.split(/;|`|´/);
     let removidoEspaco = separadoPorFimDeLinha.map(s => s.trim());
     let removidoLinhasVazias = removidoEspaco.filter(s => s != '');
     removidoLinhasVazias.forEach((l, i) => {
