@@ -1,4 +1,4 @@
-class Token {
+export class Token {
     constructor(token, codigoJs, posicao, valido){
         this.token = token;
         this.codigoJs = codigoJs;

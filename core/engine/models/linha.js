@@ -1,4 +1,4 @@
-class Linha {
+export class Linha {
     constructor(codigo, posicao, tokens){
         this.codigo = codigo;
         this.posicao = posicao;
