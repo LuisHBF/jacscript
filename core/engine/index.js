@@ -159,10 +159,6 @@ var simbolosReservados = [
     token: '#',
     codigoJs: '//'
   },
-  {
-    token: '.',
-    codigoJs: '.'
-  },
 ]; //todos os simbolos da linguagem
 var operadoresLogicos = [
   {
