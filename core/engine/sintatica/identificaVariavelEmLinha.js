@@ -1,5 +1,5 @@
-import { Linha } from './models/linha.js'
-import { Variavel } from './models/variavel.js'
+import { Linha } from '../models/linha.js'
+import { Variavel } from '../models/variavel.js'
 
 export function identificaVariavelEmLinha(linha, palavrasReservadas, tiposVariaveis) {
     if (linha.tokens.length != 5) {

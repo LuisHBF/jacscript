@@ -1,6 +1,6 @@
 import { Linha } from './models/linha.js';
 
-export function quebrarCodigoEmArrayPorLinha(codigo) {
+export function identificacaoLinha(codigo) {
     let arrayDeLinhas = [];
 
     let codigoSeparadoPorLinhas = codigo.split(/(?<=;)|(?<=`)|(?<=´)/g);

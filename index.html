@@ -13,7 +13,25 @@
   <script src="assets/lib/codemirror/lib/codemirror.js"></script>
   <link rel="stylesheet" href="assets/lib/codemirror/lib/codemirror.css">
   <script src="assets/lib/codemirror/mode/javascript/javascript.js"></script>
+  <script type="module">
+    import { identificacaoLinha } from "./core/engine/identificacaoLinha.js";
+    import { identificaTokensEmLinhas } from "./core/engine/identificaTokensEmLinhas.js";
+    import { Reservadas } from "./core/engine/index.js"
+    import { unificaStringEmToken } from "./core/engine/unificaStringEmToken.js"
+    import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
 
+    let codigoOriginal = 'multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1; ´';
+
+    let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
+
+    let codigoEmTokens = identificaTokensEmLinhas(codigoQuebradoEmLinhas, Reservadas.simbolosReservados, Reservadas.palavrasReservadas);
+
+    let stringsUnificadas = unificaStringEmToken(codigoEmTokens);
+
+    let tokensCategorizados = categorizacaoDeTokens(stringsUnificadas);
+
+    console.log(tokensCategorizados);
+</script>
   <title>Jacscript</title>
 </head>
 
