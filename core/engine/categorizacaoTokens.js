@@ -1,4 +1,4 @@
-import { Reservadas } from './index.js';
+import { Reservadas } from './reservadas.js';
 
 export function categorizacaoDeTokens(linhas) {
     let tokens = [];
@@ -8,20 +8,12 @@ export function categorizacaoDeTokens(linhas) {
         })
     });
 
-    let valores = [
-        { token: new RegExp(/^vol_[a-zA-Z_$][a-zA-Z_$0-9]*$/), codigoJs: 'VARIAVEL', ocorrencias: [] },
-        { token: new RegExp(/^(["])(?:(?=(\\?))\2.)*?\1$/), codigoJs: 'STIRNG', ocorrencias: [] },
-        { token: new RegExp(/^[0-9][0-9]*$/), codigoJs: 'INTEIRO', ocorrencias: [] },
-        { token: new RegExp(/^[0-9][0-9]*[.][0-9][0-9]*$/), codigoJs: 'FLOAT', ocorrencias: [] },
-        { token: new RegExp(/^true|false$/), codigoJs: 'BOOLEAN', ocorrencias: [] },
-    ];
-
     let tokensRestantes = [...tokens];
     let tokensCategorizados = { ...Reservadas };
     let tokensToFilter = [];
-    tokensCategorizados.valores = valores;
 
     for (let exp of tokensCategorizados.valores) {
+        exp.ocorrencias = [];
         for (let token of tokensRestantes) {
             if (exp.token.test(token.token)) {
                 exp.ocorrencias.push(token);

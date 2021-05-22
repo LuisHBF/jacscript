@@ -192,5 +192,27 @@ export const Reservadas = {
       token: 'by',
       codigoJs: '/'
     }
+  ],
+  valores: [
+    { 
+      token: new RegExp(/^vol_[a-zA-Z_$][a-zA-Z_$0-9]*$/), 
+      codigoJs: 'VARIAVEL'
+    },
+    { 
+      token: new RegExp(/^(["])(?:(?=(\\?))\2.)*?\1$/), 
+      codigoJs: 'STIRNG'
+    },
+    { 
+      token: new RegExp(/^[0-9][0-9]*$/), 
+      codigoJs: 'INTEIRO'
+    },
+    { 
+      token: new RegExp(/^[0-9][0-9]*[.][0-9][0-9]*$/), 
+      codigoJs: 'FLOAT'
+    },
+    { 
+      token: new RegExp(/^true|false$/), 
+      codigoJs: 'BOOLEAN'
+    },
   ]
 }
