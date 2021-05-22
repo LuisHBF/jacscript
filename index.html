@@ -6,10 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <link rel="stylesheet" href="style/index.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
+  <link rel="stylesheet" href="style/index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="assets/lib/codemirror/lib/codemirror.js"></script>
   <link rel="stylesheet" href="assets/lib/codemirror/lib/codemirror.css">
   <script src="assets/lib/codemirror/mode/javascript/javascript.js"></script>
@@ -20,22 +23,106 @@
     import { unificaStringEmToken } from "./core/engine/unificaStringEmToken.js"
     import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
 
-    let codigoOriginal = 'multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1; ´';
 
-    let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
+    function processaCodigoDigitado(codigoOriginal) {
+      //let codigoOriginal = 'multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1; ´';
 
-    let codigoEmTokens = identificaTokensEmLinhas(codigoQuebradoEmLinhas, Reservadas.simbolosReservados, Reservadas.palavrasReservadas);
+      let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
 
-    let stringsUnificadas = unificaStringEmToken(codigoEmTokens);
+      let codigoEmTokens = identificaTokensEmLinhas(codigoQuebradoEmLinhas, Reservadas.simbolosReservados, Reservadas.palavrasReservadas);
 
-    let tokensCategorizados = categorizacaoDeTokens(stringsUnificadas);
+      let stringsUnificadas = unificaStringEmToken(codigoEmTokens);
 
-    console.log(tokensCategorizados);
-</script>
+      let tokensCategorizados = categorizacaoDeTokens(stringsUnificadas);
+
+      exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados);
+    }
+
+    function recuperaCodigoDigitado() {
+      let codigoOriginal = document.getElementById('editor123').value;
+      processaCodigoDigitado(codigoOriginal);
+    }
+
+    function somaOcorrencias(array) {
+      let resultado = 0;
+      array.forEach(item => {
+        resultado += item.ocorrencias.length;
+      })
+      return resultado;
+    }
+
+
+
+
+    function exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados) {
+      console.log(codigoQuebradoEmLinhas);
+      console.log(codigoEmTokens);
+      console.log(stringsUnificadas);
+      console.log(tokensCategorizados);
+
+      let exibicao = document.getElementById('exibicao');
+
+      let conteudoExibido = [
+        { titulo: 'Quantidade de Linhas', valor: codigoQuebradoEmLinhas.length, callback: `exibeDetalhesQuantidadeDeLinhas('${btoa(JSON.stringify(codigoQuebradoEmLinhas))}')`},
+        { titulo: 'Quantidade de Variáveis', valor: tokensCategorizados.valores[0].ocorrencias?.length },
+        { titulo: 'Quantidade de Operadores Aritméticos', valor: somaOcorrencias(tokensCategorizados.operadoresAritmeticos) },
+        { titulo: 'Quantidade de Operadores Lógicos', valor: somaOcorrencias(tokensCategorizados.operadoresLogicos) },
+        { titulo: 'Quantidade de Palavras Reservadas', valor: somaOcorrencias(tokensCategorizados.palavrasReservadas) },
+        { titulo: 'Quantidade de Simbolos Reservados', valor: somaOcorrencias(tokensCategorizados.simbolosReservados) },
+        { titulo: 'Quantidade de Tipos de Variáveis', valor: somaOcorrencias(tokensCategorizados.tiposVariaveis) },
+        { titulo: 'Quantidade de Valores', valor: somaOcorrencias(tokensCategorizados.valores) },
+        { titulo: 'Quantidade de Símbolos Não Identificados', valor: tokensCategorizados.naoIdentificados.length },
+      ]
+
+      conteudoExibido.forEach((conteudo, indice) => {
+        exibicao.innerHTML += `
+        <tr>
+                  <th scope="row">${indice + 1}</th>
+                  <td>${conteudo.titulo}</td>
+                  <td>${conteudo.valor}</td>
+                  <td>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="${conteudo.callback}">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </td>
+        </tr>        
+        `;
+      })
+    }
+
+
+
+
+    document.getElementById('botaoCompilar').addEventListener('click', () => {
+      recuperaCodigoDigitado();
+    })
+
+  </script>
   <title>Jacscript</title>
 </head>
 
 <body>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Informações</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container text-center my-3">
     <img src="assets/img/lamp.png" alt="homem" height="50px">
     <h1>Jacscript</h1>
@@ -51,11 +138,13 @@
         <div class="row">
           <div class="col-12 d-flex justify-content-between align-items-center border py-2">
             <div>Main.jacs</div>
-            <button class="btn btn-sm btn-primary" type="submit">Compilar</button>
+            <button class="btn btn-sm btn-primary" type="button" id="botaoCompilar">Compilar</button>
           </div>
 
           <div class="col-12 border">
-            <textarea id="editor"></textarea>
+            <textarea id="editor123">
+              multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1;
+            </textarea>
           </div>
         </div>
       </div>
@@ -68,7 +157,19 @@
           </div>
 
           <div class="col-12 border">
-            <div></div>
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Ocorrência</th>
+                  <th scope="col">Quantidade</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="exibicao">
+
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -76,8 +177,39 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+
+
+  <script>
+    function exibeDetalhesQuantidadeDeLinhas(codigoQuebradoEmLinhas) {
+      codigoQuebradoEmLinhas = JSON.parse(atob(codigoQuebradoEmLinhas));
+      console.log(codigoQuebradoEmLinhas);
+      let corpoModal = document.getElementsByClassName('modal-body')[0];
+      
+      let html = '';
+
+      codigoQuebradoEmLinhas.forEach((linha, index) => {
+        html += '<hr class="mt-2">'
+        html += `<b> Linha ${index + 1}: </b> <br>`;
+        html += `<b> Código Encontrado: </b> <code>${linha.codigo}</code> <br>`;
+        html += `<b>Tokens: </b> <br>`;
+        linha.tokens.forEach((token, indice) => {
+          html += `<b>Token</b>: <code>${token.token}</code> | <b>posicao inicial:</b> ${token.posicao.inicio} | <b>posicao final:</b> ${token.posicao.fim} <br>`
+        })
+      })
+
+      corpoModal.innerHTML += html;
+    }
+
+
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
   <script src="core/interface/index.js"></script>
 </body>
