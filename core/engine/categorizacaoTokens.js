@@ -23,20 +23,14 @@ export function categorizacaoDeTokens(linhas) {
     }
 
     for (let categoria in Reservadas) {
-        for (let reservada of Reservadas[categoria]) {
-            reservada.ocorrencias = []
-            for (let token of tokensRestantes) {
-                if (reservada.token == token.token) {
-                    if (token.token == '<') {
-                        token.token = '&lt';
+        if (categoria != 'valores') {
+            for (let reservada of Reservadas[categoria]) {
+                reservada.ocorrencias = []
+                for (let token of tokensRestantes) {
+                    if (reservada.token == token.token) {
+                        reservada.ocorrencias.push(token);
+                        tokensToFilter.push(token.token);
                     }
-
-                    if (token.token == '>') {
-                        token.token = '&gt';
-                    }
-                    reservada.ocorrencias.push(token);
-                    tokensToFilter.push(token.token);
-
                 }
             }
         }

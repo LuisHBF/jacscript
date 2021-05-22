@@ -22,10 +22,10 @@
     import { Reservadas } from "./core/engine/reservadas.js"
     import { unificaStringEmToken } from "./core/engine/unificaStringEmToken.js"
     import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
+    import { Conteudo } from "./core/engine/models/conteudo.js"
 
 
     function processaCodigoDigitado(codigoOriginal) {
-      //let codigoOriginal = 'multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1; ´';
 
       let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
 
@@ -55,33 +55,28 @@
 
 
     function exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados) {
-      console.log(codigoQuebradoEmLinhas);
-      console.log(codigoEmTokens);
-      console.log(stringsUnificadas);
-      console.log(tokensCategorizados);
-
       let exibicao = document.getElementById('exibicao');
 
       let conteudoExibido = [
-        { titulo: 'Quantidade de Linhas', valor: codigoQuebradoEmLinhas.length, callback: `exibeDetalhesQuantidadeDeLinhas('${btoa(JSON.stringify(codigoQuebradoEmLinhas))}')`},
-        { titulo: 'Quantidade de Variáveis', valor: tokensCategorizados.valores[0].ocorrencias?.length },
-        { titulo: 'Quantidade de Operadores Aritméticos', valor: somaOcorrencias(tokensCategorizados.operadoresAritmeticos) },
-        { titulo: 'Quantidade de Operadores Lógicos', valor: somaOcorrencias(tokensCategorizados.operadoresLogicos) },
-        { titulo: 'Quantidade de Palavras Reservadas', valor: somaOcorrencias(tokensCategorizados.palavrasReservadas) },
-        { titulo: 'Quantidade de Simbolos Reservados', valor: somaOcorrencias(tokensCategorizados.simbolosReservados) },
-        { titulo: 'Quantidade de Tipos de Variáveis', valor: somaOcorrencias(tokensCategorizados.tiposVariaveis) },
-        { titulo: 'Quantidade de Valores', valor: somaOcorrencias(tokensCategorizados.valores) },
-        { titulo: 'Quantidade de Símbolos Não Identificados', valor: tokensCategorizados.naoIdentificados.length },
-      ]
+        new Conteudo('Quantidade de Linhas', codigoQuebradoEmLinhas.length, `exibeDetalhesQuantidadeDeLinhas('${btoa(JSON.stringify(codigoQuebradoEmLinhas))}')`, null),
+        new Conteudo('Palavras Reservadas', somaOcorrencias(tokensCategorizados.palavrasReservadas), null, tokensCategorizados.palavrasReservadas),
+        new Conteudo('Operadores Aritméticos', somaOcorrencias(tokensCategorizados.operadoresAritmeticos), null, tokensCategorizados.operadoresAritmeticos),
+        new Conteudo('Operadores Lógicos', somaOcorrencias(tokensCategorizados.operadoresLogicos), null, tokensCategorizados.operadoresLogicos),
+        new Conteudo('Símbolos Reservados', somaOcorrencias(tokensCategorizados.simbolosReservados), null, tokensCategorizados.simbolosReservados),
+        new Conteudo('Tipos de Variáveis', somaOcorrencias(tokensCategorizados.tiposVariaveis), null, tokensCategorizados.tiposVariaveis),
+        new Conteudo('Variáveis', tokensCategorizados.valores[0].ocorrencias?.length, `exibeVariaveis('${btoa(JSON.stringify(tokensCategorizados))}')`, null),
+        new Conteudo('Valores', somaOcorrencias(tokensCategorizados.valores), null, null),
+        new Conteudo('Símbolos Não Identificados', tokensCategorizados.naoIdentificados.length, null, null),
+      ];
 
       conteudoExibido.forEach((conteudo, indice) => {
         exibicao.innerHTML += `
         <tr>
-                  <th scope="row">${indice + 1}</th>
-                  <td>${conteudo.titulo}</td>
-                  <td>${conteudo.valor}</td>
-                  <td>
-                    <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="${conteudo.callback}">
+                  <th scope="row" class="align-middle">${indice + 1}</th>
+                  <td class="align-middle">${conteudo.titulo}</td>
+                  <td class="align-middle">${conteudo.valor}</td>
+                  <td class="align-middle">
+                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal" onclick="${conteudo.callback}">
                       <i class="fa fa-search"></i>
                     </button>
                   </td>
@@ -89,9 +84,6 @@
         `;
       })
     }
-
-
-
 
     document.getElementById('botaoCompilar').addEventListener('click', () => {
       recuperaCodigoDigitado();
@@ -105,7 +97,7 @@
 
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Informações</h5>
@@ -142,7 +134,7 @@
           </div>
 
           <div class="col-12 border">
-            <textarea id="editor123">
+            <textarea id="editor123" cols="50" rows="10">
               multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1;
             </textarea>
           </div>
@@ -156,8 +148,8 @@
             <button class="btn btn-sm btn-outline-secondary" type="submit">Limpar</button>
           </div>
 
-          <div class="col-12 border">
-            <table class="table text-center">
+          <div class="col-12 border align-self-center">
+            <table class="table text-center table-sm table-bordered table-striped">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -177,29 +169,112 @@
     </div>
   </div>
 
-
-
   <script>
+
+    function exibeGenerico(obj, titulo) {
+      items = JSON.parse(atob(obj));
+      let corpoModal = document.getElementsByClassName('modal-body')[0];
+      corpoModal.innerHTML = '';
+      let html = '';
+
+      html += `<h3>${titulo}</h3><br>`
+      items.forEach((item, index) => {
+        if (item.ocorrencias.length) {
+          item.token = replaceHtml(item.token);
+          html += `<b> Token: </b> <code>${item.token}</code> <br>`
+          html += `Código em JS:  <code>${item.codigoJs}</code> <br>`
+          html += ` Ocorrencias: <code>${item.ocorrencias.length}</code> <br>`
+          html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
+          html += `<thead>`
+          html += `<tr>`
+          html += `<th scope="col">Linha</th>`
+          html += `<th scope="col">Posição Inicial</th>`
+          html += `<th scope="col">Posição Final</th>`
+          html += `</tr>`
+          html += `</thead>`
+          html += `<tbody>`
+          item.ocorrencias.forEach((token) => {
+            html += `<tr>`
+            html += `<th>${token.posicao.linha + 1}</th>`
+            html += `<td>${token.posicao.inicio}</td>`
+            html += `<td>${token.posicao.fim}</td>`
+            html += `</tr>`
+          });
+          html += `</tbody>`
+          html += `</table>`
+        }
+      });
+
+      corpoModal.innerHTML += html;
+    }
+
+    function exibeVariaveis(tokensCategorizados) {
+      tokensCategorizados = JSON.parse(atob(tokensCategorizados));
+      let corpoModal = document.getElementsByClassName('modal-body')[0];
+      corpoModal.innerHTML = '';
+      let html = '';
+
+
+      html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
+      html += `<thead>`
+      html += `<tr>`
+      html += `<th scope="col">Variável</th>`
+      html += `<th scope="col">Linha</th>`
+      html += `<th scope="col">Posição</th>`
+      html += `</tr>`
+      html += `</thead>`
+      html += `<tbody>`
+      tokensCategorizados.valores[0].ocorrencias.forEach((variavel, index) => {
+        html += ` <tr>`
+        html += `<th scope="row"><code>${variavel.token}</code></th>`
+        html += `<td>${variavel.posicao.linha + 1}</td>`
+        html += `<td>${variavel.posicao.inicio} - ${variavel.posicao.fim}</td>`
+        html += `</tr>`
+      })
+      html += `</tbody>`
+      html += `</table>`
+
+      corpoModal.innerHTML += html;
+    }
+
     function exibeDetalhesQuantidadeDeLinhas(codigoQuebradoEmLinhas) {
       codigoQuebradoEmLinhas = JSON.parse(atob(codigoQuebradoEmLinhas));
-      console.log(codigoQuebradoEmLinhas);
       let corpoModal = document.getElementsByClassName('modal-body')[0];
-      
+      corpoModal.innerHTML = '';
       let html = '';
 
       codigoQuebradoEmLinhas.forEach((linha, index) => {
-        html += '<hr class="mt-2">'
-        html += `<b> Linha ${index + 1}: </b> <br>`;
-        html += `<b> Código Encontrado: </b> <code>${linha.codigo}</code> <br>`;
-        html += `<b>Tokens: </b> <br>`;
-        linha.tokens.forEach((token, indice) => {
-          html += `<b>Token</b>: <code>${token.token}</code> | <b>posicao inicial:</b> ${token.posicao.inicio} | <b>posicao final:</b> ${token.posicao.fim} <br>`
-        })
+        linha.codigo = replaceHtml(linha.codigo);
+        html += `<b> Linha ${index + 1}: </b> <br>`
+        html += `<b> Código Encontrado: </b> <code>${linha.codigo}</code> <br>`
+        html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
+        html += `<thead>`
+        html += `<tr>`
+        html += `<th scope="col">Token</th>`
+        html += `<th scope="col">Posição Inicial</th>`
+        html += `<th scope="col">Posição Final</th>`
+        html += `</tr>`
+        html += `</thead>`
+        html += `<tbody>`
+        linha.tokens.forEach((token) => {
+          html += ` <tr>`
+          html += `<th scope="row"><code>${token.token}</code></th>`
+          html += `<td>${token.posicao.inicio}</td>`
+          html += `<td>${token.posicao.fim}</td>`
+          html += `</tr>`
+        });
+        html += `</tbody>`
+        html += `</table>`
       })
 
       corpoModal.innerHTML += html;
     }
 
+    function replaceHtml(linha) {
+      linha = linha.replace('<', '&lt');
+      linha = linha.replace('>', '&gt');
+      return linha
+    }
 
   </script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

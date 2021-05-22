@@ -96,19 +96,19 @@ export const Reservadas = {
   tiposVariaveis: [
     {
       token: '@int',
-      tipoJs: 'number'
+      codigoJs: 'number'
     },
     {
       token: '@flt',
-      tipoJs: 'number'
+      codigoJs: 'number'
     },
     {
       token: '@str',
-      tipoJs: 'string'
+      codigoJs: 'string'
     },
     {
       token: '@bool',
-      tipoJs: 'boolean'
+      codigoJs: 'boolean'
     },
   ], // todos os tipos de variaveis
   simbolosReservados: [
@@ -194,24 +194,24 @@ export const Reservadas = {
     }
   ],
   valores: [
-    { 
-      token: new RegExp(/^vol_[a-zA-Z_$][a-zA-Z_$0-9]*$/), 
+    {
+      token: new RegExp(/^vol_[a-zA-Z_$][a-zA-Z_$0-9]*$/),
       codigoJs: 'VARIAVEL'
     },
-    { 
-      token: new RegExp(/^(["])(?:(?=(\\?))\2.)*?\1$/), 
+    {
+      token: new RegExp(/^(["])(?:(?=(\\?))\2.)*?\1$/),
       codigoJs: 'STRING'
     },
-    { 
-      token: new RegExp(/^[0-9][0-9]*$/), 
+    {
+      token: new RegExp(/^[0-9][0-9]*$/),
       codigoJs: 'INTEIRO'
     },
-    { 
-      token: new RegExp(/^[0-9][0-9]*[.][0-9][0-9]*$/), 
+    {
+      token: new RegExp(/^[0-9][0-9]*[.][0-9][0-9]*$/),
       codigoJs: 'FLOAT'
     },
-    { 
-      token: new RegExp(/^true|false$/), 
+    {
+      token: new RegExp(/^true|false$/),
       codigoJs: 'BOOLEAN'
     },
   ]

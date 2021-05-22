@@ -1,7 +1,7 @@
-export class Condicao{
-    constructor(teste, linhasIf, linhasElse){
-        this.teste = teste;
-        this.linhasIf = linhasIf;
-        this.linhasElse = linhasElse;
+export class Linha {
+    constructor(codigo, posicao, tokens) {
+        this.codigo = codigo;
+        this.posicao = posicao;
+        this.tokens = tokens;
     }
 }
