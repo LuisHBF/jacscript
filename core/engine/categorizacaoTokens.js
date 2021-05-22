@@ -27,8 +27,16 @@ export function categorizacaoDeTokens(linhas) {
             reservada.ocorrencias = []
             for (let token of tokensRestantes) {
                 if (reservada.token == token.token) {
+                    if (token.token == '<') {
+                        token.token = '&lt';
+                    }
+
+                    if (token.token == '>') {
+                        token.token = '&gt';
+                    }
                     reservada.ocorrencias.push(token);
                     tokensToFilter.push(token.token);
+
                 }
             }
         }
