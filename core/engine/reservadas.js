@@ -200,19 +200,19 @@ export const Reservadas = {
     },
     {
       token: new RegExp(/^(["])(?:(?=(\\?))\2.)*?\1$/),
-      codigoJs: 'STRING'
+      codigoJs: '@str'
     },
     {
       token: new RegExp(/^[0-9][0-9]*$/),
-      codigoJs: 'INTEIRO'
+      codigoJs: '@int'
     },
     {
       token: new RegExp(/^[0-9][0-9]*[.][0-9][0-9]*$/),
-      codigoJs: 'FLOAT'
+      codigoJs: '@flt'
     },
     {
       token: new RegExp(/^true|false$/),
-      codigoJs: 'BOOLEAN'
+      codigoJs: '@bool'
     },
   ]
 }
