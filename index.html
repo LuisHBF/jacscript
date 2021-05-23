@@ -113,7 +113,7 @@
 
 </head>
 
-<body>
+<body style="display: none;">
 
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -394,13 +394,24 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       if(!elemento){
         document.getElementsByTagName('head')[0].innerHTML += style;
         document.getElementsByClassName('fa-lightbulb')[0].style.color='#1b1a1a';
+        localStorage.setItem('darkmode','on');
       } else {
         elemento.remove();
         document.getElementsByClassName('fa-lightbulb')[0].style.color='yellow';
+        localStorage.setItem('darkmode','off');
       }
     }
 
+    function verificaDarkMode(){
+      if(localStorage.getItem('darkmode') === 'on'){
+        toggleDarkMode();
+      }
 
+      document.getElementsByTagName('body')[0].style.display="block";
+
+    }
+
+    verificaDarkMode();
   </script>
 
   <!-- Scripts externos -->
