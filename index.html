@@ -76,9 +76,9 @@
 
       conteudoExibido.forEach((conteudo, indice) => {
         let colorClass = ''
-        if (indice == conteudoExibido.length -1){
+        if (indice == conteudoExibido.length - 1) {
           colorClass = 'text-danger';
-        } 
+        }
         if (conteudo.valor) {
           html += `<tr>`
           html += `<td class="align-middle ${colorClass}">${conteudo.titulo}</td>`
@@ -106,8 +106,11 @@
       return resultado;
     }
 
+
   </script>
   <title>Jacscript</title>
+
+
 </head>
 
 <body>
@@ -135,10 +138,11 @@
 
   <!-- Header -->
   <div class="container text-center my-3">
-    <img src="assets/img/lamp.png" alt="homem" height="50px">
+    <i class="fas fa-lightbulb" onclick="toggleDarkMode()" style="font-size: 50px; color: yellow"></i>
     <h1>Jacscript</h1>
-    <div>Linguagem de Programação baseada no TypeScript, sendo uma adaptação de seus
-      paradigmas.
+    <div>
+      <p>Linguagem de Programação baseada no TypeScript, sendo uma adaptação de seus
+        paradigmas.</p>
     </div>
   </div>
 
@@ -236,8 +240,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
         if (item.ocorrencias.length) {
           item.token = replaceHtml(item.token);
           html += `<b> Token: </b> <code>${item.token}</code> <br>`
-          html += `Código em JS:  <code>${item.codigoJs}</code> <br>`
-          html += ` Ocorrencias: <code>${item.ocorrencias.length}</code> <br>`
+          html += `<b>Código em JS: </b> <code>${item.codigoJs}</code> <br>`
+          html += `<b>Ocorrencias:</b> <code>${item.ocorrencias.length}</code> <br>`
           html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
           html += `<thead>`
           html += `<tr>`
@@ -365,6 +369,37 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       linha = linha.replace('>', '&gt');
       return linha
     }
+
+    
+
+    function toggleDarkMode() {
+      let style = `
+      
+      <style id="darkmode">
+        body, .modal, .modal-dialog, .modal-content, textarea{
+          background-color: #000 !important;
+        }
+
+        .modal-content{
+          border: 2px solid white;
+        }
+        h1,h2,h3,h4,h5,h6,p, table, .col-12, textarea, b{
+          color: #fff;
+        }
+      </style> 
+      `;
+
+      let elemento = document.getElementById('darkmode');
+
+      if(!elemento){
+        document.getElementsByTagName('head')[0].innerHTML += style;
+        document.getElementsByClassName('fa-lightbulb')[0].style.color='#1b1a1a';
+      } else {
+        elemento.remove();
+        document.getElementsByClassName('fa-lightbulb')[0].style.color='yellow';
+      }
+    }
+
 
   </script>
 
