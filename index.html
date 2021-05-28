@@ -17,6 +17,16 @@
   <link rel="stylesheet" href="assets/lib/codemirror/lib/codemirror.css">
   <script src="assets/lib/codemirror/mode/javascript/javascript.js"></script>
 
+  <!-- Definição de fonte -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap" rel="stylesheet">
+  <style>
+    html,body {
+      font-family: 'Ubuntu', sans-serif;
+    }
+  </style>
+
+
   <!-- Scripts para processamento da entrada -->
   <script type="module">
     import { identificacaoLinha } from "./core/engine/identificacaoLinha.js";
@@ -138,10 +148,15 @@
 
   <!-- Header -->
   <div class="container text-center my-3">
-    <i class="fas fa-lightbulb" onclick="toggleDarkMode()" style="font-size: 50px; color: yellow"></i>
+    <!-- <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
+      style="font-size: 50px; color: yellow;text-shadow: 0px 0px 3px #000;"></i>
+    <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
+      style="font-size: 50px; color: yellow;text-shadow: 2px 2px 3px #000;"></i> -->
+    <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
+      style="font-size: 50px; color: yellow;text-shadow: 2px 2px 0px #000;"></i>
     <h1>Jacscript</h1>
     <div>
-      <p>Linguagem de Programação baseada no TypeScript, sendo uma adaptação de seus
+      <p>Linguagem de Programação baseada no <i>TypeScript</i>, sendo uma adaptação de seus
         paradigmas.</p>
     </div>
   </div>
@@ -370,7 +385,7 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       return linha
     }
 
-    
+
 
     function toggleDarkMode() {
       let style = `
@@ -391,23 +406,23 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
 
       let elemento = document.getElementById('darkmode');
 
-      if(!elemento){
+      if (!elemento) {
         document.getElementsByTagName('head')[0].innerHTML += style;
-        document.getElementsByClassName('fa-lightbulb')[0].style.color='#1b1a1a';
-        localStorage.setItem('darkmode','on');
+        document.getElementsByClassName('fa-lightbulb')[0].style.color = '#1b1a1a';
+        localStorage.setItem('darkmode', 'on');
       } else {
         elemento.remove();
-        document.getElementsByClassName('fa-lightbulb')[0].style.color='yellow';
-        localStorage.setItem('darkmode','off');
+        document.getElementsByClassName('fa-lightbulb')[0].style.color = 'yellow';
+        localStorage.setItem('darkmode', 'off');
       }
     }
 
-    function verificaDarkMode(){
-      if(localStorage.getItem('darkmode') === 'on'){
+    function verificaDarkMode() {
+      if (localStorage.getItem('darkmode') === 'on') {
         toggleDarkMode();
       }
 
-      document.getElementsByTagName('body')[0].style.display="block";
+      document.getElementsByTagName('body')[0].style.display = "block";
 
     }
 
