@@ -211,7 +211,7 @@ export const Reservadas = {
       codigoJs: '@flt'
     },
     {
-      token: new RegExp(/^true|false$/),
+      token: new RegExp(/^((true)|(false))$/),
       codigoJs: '@bool'
     },
   ]

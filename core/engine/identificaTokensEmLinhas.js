@@ -3,7 +3,7 @@ import { Token } from './models/token.js';
 export function identificaTokensEmLinhas(linhas, simbolos, palavrasReservadas) {
     linhas.forEach(l => {
         let tokens = [];
-        let removidoEspaco = l.codigo.replaceAll(' ', '🤡 🤡').split('🤡');
+        let removidoEspaco = l.codigo.replaceAll(' ', '🤡 🤡').replaceAll('\n', '🤡\n🤡').split('🤡');
         simbolos.forEach(simbolo => {
             for (let i = 0; i < removidoEspaco.length; i++) {
                 removidoEspaco[i] = removidoEspaco[i].replaceAll(simbolo.token, '🤬' + simbolo.token + '🤬');
