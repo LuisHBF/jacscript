@@ -6,24 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="style/index.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-  <link rel="stylesheet" href="style/index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <script src="assets/lib/codemirror/lib/codemirror.js"></script>
   <link rel="stylesheet" href="assets/lib/codemirror/lib/codemirror.css">
   <script src="assets/lib/codemirror/mode/javascript/javascript.js"></script>
+  <link rel="stylesheet" href="assets/lib/codemirror/theme/abcdef.css">
 
   <!-- Definição de fonte -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap" rel="stylesheet">
   <style>
-    html,body {
+    html,
+    body {
       font-family: 'Ubuntu', sans-serif;
-    }
+    };
   </style>
 
 
@@ -35,13 +37,14 @@
     import { unificaStringEmToken } from "./core/engine/unificaStringEmToken.js"
     import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
     import { Conteudo } from "./core/engine/models/conteudo.js"
+    import codeMirror from "./core/interface/index.js"
 
     document.getElementById('botaoCompilar').addEventListener('click', () => {
       recuperaCodigoDigitado();
     })
 
     function recuperaCodigoDigitado() {
-      let codigoOriginal = document.getElementById('editor123').value;
+      let codigoOriginal = codeMirror.getValue();
       processaCodigoDigitado(codigoOriginal);
     }
 
@@ -73,15 +76,15 @@
       let html = '';
 
       let conteudoExibido = [
-        new Conteudo('Quantidade de Linhas', codigoQuebradoEmLinhas.length, `exibeDetalhesDeLinhas('${btoa(JSON.stringify(codigoQuebradoEmLinhas))}')`, null),
+        new Conteudo('Quantidade de Linhas', codigoQuebradoEmLinhas.length, `exibeDetalhesDeLinhas('${btoa(JSON.stringify(codigoQuebradoEmLinhas))}', 'Quantidade de Linhas')`, null),
         new Conteudo('Palavras Reservadas', somaOcorrencias(tokensCategorizados.palavrasReservadas, 0), null, tokensCategorizados.palavrasReservadas),
         new Conteudo('Operadores Aritméticos', somaOcorrencias(tokensCategorizados.operadoresAritmeticos, 0), null, tokensCategorizados.operadoresAritmeticos),
         new Conteudo('Operadores Lógicos', somaOcorrencias(tokensCategorizados.operadoresLogicos, 0), null, tokensCategorizados.operadoresLogicos),
         new Conteudo('Símbolos Reservados', somaOcorrencias(tokensCategorizados.simbolosReservados, 0), null, tokensCategorizados.simbolosReservados),
         new Conteudo('Tipos de Variáveis', somaOcorrencias(tokensCategorizados.tiposVariaveis, 0), null, tokensCategorizados.tiposVariaveis),
-        new Conteudo('Variáveis', tokensCategorizados.valores[0].ocorrencias?.length, `exibeVariaveis('${btoa(JSON.stringify(tokensCategorizados))}')`, null),
-        new Conteudo('Valores', somaOcorrencias(tokensCategorizados.valores, tokensCategorizados.valores[0].ocorrencias?.length), `exibeValores('${btoa(JSON.stringify(tokensCategorizados))}')`, null),
-        new Conteudo('Símbolos Não Identificados', tokensCategorizados.naoIdentificados.length, `exibeNaoIdentificados('${btoa(JSON.stringify(tokensCategorizados.naoIdentificados))}')`, null),
+        new Conteudo('Variáveis', tokensCategorizados.valores[0].ocorrencias?.length, `exibeVariaveis('${btoa(JSON.stringify(tokensCategorizados))}', 'Variáveis')`, null),
+        new Conteudo('Valores', somaOcorrencias(tokensCategorizados.valores, tokensCategorizados.valores[0].ocorrencias?.length), `exibeValores('${btoa(JSON.stringify(tokensCategorizados))}', 'Valores')`, null),
+        new Conteudo('Símbolos Não Identificados', tokensCategorizados.naoIdentificados.length, `exibeNaoIdentificados('${btoa(JSON.stringify(tokensCategorizados.naoIdentificados))}', 'Símbolos Não Identificados')`, null),
       ];
 
       conteudoExibido.forEach((conteudo, indice) => {
@@ -148,51 +151,45 @@
 
   <!-- Header -->
   <div class="container text-center my-3">
-    <!-- <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
-      style="font-size: 50px; color: yellow;text-shadow: 0px 0px 3px #000;"></i>
     <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
-      style="font-size: 50px; color: yellow;text-shadow: 2px 2px 3px #000;"></i> -->
-    <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
-      style="font-size: 50px; color: yellow;text-shadow: 2px 2px 0px #000;"></i>
+      style="font-size: 50px; color: yellow;"></i>
     <h1>Jacscript</h1>
     <div>
       <p>Linguagem de Programação baseada no <i>TypeScript</i>, sendo uma adaptação de seus
-        paradigmas.</p>
+        paradigmas.deded</p>
     </div>
   </div>
+
+
 
   <!-- Editor -->
   <div class="container-fluid">
     <div class="row">
 
-      <div class="col-12 col-md-6">
-        <div class="row">
-
-          <!-- Entrada -->
-          <div class="col-12 d-flex justify-content-between align-items-center border py-2">
-            <div>Main.jacs</div>
-            <button class="btn btn-sm btn-outline-primary" type="button" id="botaoCompilar">Compilar</button>
+      <div class="col-12 col-lg-6">
+        <div class="card border mb-3" id="entrada" style="max-width: 100%;">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>Entrada</div>
+            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoCompilar">Analizar</a>
           </div>
-
-          <div class="col-12 border">
-            <!-- Código placeholder pré-digitado -->
-            <textarea id="editor123" cols="50" rows="10">
-multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int is vol_multiplicando times vol_multiplicador; output<vol_multiplicando|" X "|vol_multiplicador|" = "|vol_produto>; vol_multiplicador is vol_multiplicador plus 1;
-            </textarea>
+          <div class="card-body p-0">
+            <textarea id="editor"></textarea>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <small class="text-muted">Analizador Léxico</small>
+            <a href="#entrada">subir</a>
           </div>
         </div>
       </div>
 
-      <div class="col-12 col-md-6">
-        <div class="row">
-
-          <!-- Saída -->
-          <div class="col-12 d-flex justify-content-between align-items-center border py-2">
+      <div class="col-12 col-lg-6">
+        <div class="card border mb-3" id="saida" style="max-width: 100%;">
+          <div class="card-header d-flex justify-content-between align-items-center">
             <div>Saída</div>
             <button class="btn btn-sm btn-outline-secondary" type="button" id="botaoLimpar">Limpar</button>
           </div>
-          <div class="col-12 border align-self-center">
-            <table class="table text-center table-sm table-bordered table-striped mt-3">
+          <div class="card-body p-0">
+            <table class="table text-center table-sm table-bordered m-0">
               <thead>
                 <tr>
                   <th scope="col">Ocorrência</th>
@@ -200,23 +197,25 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
                   <th scope="col" style='width: 76px'>Detalhes</th>
                 </tr>
               </thead>
-              <tbody id="exibicao">
-
-              </tbody>
+              <tbody id="exibicao"></tbody>
             </table>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Resultado da Analize</small>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
   <!-- Scripts para exibição do modal -->
   <script>
-    function exibeDetalhesDeLinhas(codigoQuebradoEmLinhas) {
+    function exibeDetalhesDeLinhas(codigoQuebradoEmLinhas, titulo) {
       codigoQuebradoEmLinhas = JSON.parse(atob(codigoQuebradoEmLinhas));
       let corpoModal = document.getElementsByClassName('modal-body')[0];
       corpoModal.innerHTML = '';
-      let html = '';
+      let html = `<h3>${titulo}</h3><br>`;
 
       codigoQuebradoEmLinhas.forEach((linha, index) => {
         linha.codigo = replaceHtml(linha.codigo);
@@ -234,8 +233,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
         linha.tokens.forEach((token) => {
           html += ` <tr>`
           html += `<th scope="row"><code>${token.token}</code></th>`
-          html += `<td>${token.posicao.inicio}</td>`
-          html += `<td>${token.posicao.fim}</td>`
+          html += `<td>${token.posicao.inicio + 1}</td>`
+          html += `<td>${token.posicao.fim + 1}</td>`
           html += `</tr>`
         });
         html += `</tbody>`
@@ -269,8 +268,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
           item.ocorrencias.forEach((token) => {
             html += `<tr>`
             html += `<th>${token.posicao.linha + 1}</th>`
-            html += `<td>${token.posicao.inicio}</td>`
-            html += `<td>${token.posicao.fim}</td>`
+            html += `<td>${token.posicao.inicio + 1}</td>`
+            html += `<td>${token.posicao.fim + 1}</td>`
             html += `</tr>`
           });
           html += `</tbody>`
@@ -281,11 +280,11 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       corpoModal.innerHTML += html;
     }
 
-    function exibeVariaveis(tokensCategorizados) {
+    function exibeVariaveis(tokensCategorizados, titulo) {
       tokensCategorizados = JSON.parse(atob(tokensCategorizados));
       let corpoModal = document.getElementsByClassName('modal-body')[0];
       corpoModal.innerHTML = '';
-      let html = '';
+      let html = `<h3 class="mb-3">${titulo}</h3>`;
 
       html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
       html += `<thead>`
@@ -301,8 +300,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
         html += ` <tr>`
         html += `<th scope="row"><code>${token.token}</code></th>`
         html += `<td>${token.posicao.linha + 1}</td>`
-        html += `<td>${token.posicao.inicio}</td>`
-        html += `<td>${token.posicao.fim}</td>`
+        html += `<td>${token.posicao.inicio + 1}</td>`
+        html += `<td>${token.posicao.fim + 1}</td>`
         html += `</tr>`
       });
       html += `</tbody>`
@@ -311,11 +310,11 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       corpoModal.innerHTML += html;
     }
 
-    function exibeValores(tokensCategorizados) {
+    function exibeValores(tokensCategorizados, titulo) {
       tokensCategorizados = JSON.parse(atob(tokensCategorizados));
       let corpoModal = document.getElementsByClassName('modal-body')[0];
       corpoModal.innerHTML = '';
-      let html = '';
+      let html = `<h3>${titulo}</h3><br>`;
 
       let valores = tokensCategorizados.valores.filter((v, i) => i > 0);
 
@@ -336,8 +335,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
             html += ` <tr>`
             html += `<th scope="row"><code>${token.token}</code></th>`
             html += `<td>${token.posicao.linha + 1}</td>`
-            html += `<td>${token.posicao.inicio}</td>`
-            html += `<td>${token.posicao.fim}</td>`
+            html += `<td>${token.posicao.inicio + 1}</td>`
+            html += `<td>${token.posicao.fim + 1}</td>`
             html += `</tr>`
           });
           html += `</tbody>`
@@ -348,11 +347,11 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       corpoModal.innerHTML += html;
     }
 
-    function exibeNaoIdentificados(naoIdentificados) {
+    function exibeNaoIdentificados(naoIdentificados, titulo) {
       naoIdentificados = JSON.parse(atob(naoIdentificados));
       let corpoModal = document.getElementsByClassName('modal-body')[0];
       corpoModal.innerHTML = '';
-      let html = '';
+      let html = `<h3 class="mb-3">${titulo}</h3>`;
 
       html += `<table class="table text-center table-sm table-bordered table-striped mt-2">`
       html += `<thead>`
@@ -369,8 +368,8 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
         html += ` <tr>`
         html += `<th scope="row"><code>${token.token}</code></th>`
         html += `<td>${token.posicao.linha + 1}</td>`
-        html += `<td>${token.posicao.inicio}</td>`
-        html += `<td>${token.posicao.fim}</td>`
+        html += `<td>${token.posicao.inicio + 1}</td>`
+        html += `<td>${token.posicao.fim + 1}</td>`
         html += `</tr>`
       });
       html += `</tbody>`
@@ -382,6 +381,7 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
     function replaceHtml(linha) {
       linha = linha.replace('<', '&lt');
       linha = linha.replace('>', '&gt');
+      linha = linha.replace(';', '&#59');
       return linha
     }
 
@@ -391,15 +391,19 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
       let style = `
       
       <style id="darkmode">
-        body, .modal, .modal-dialog, .modal-content, textarea{
-          background-color: #000 !important;
+        .modal{
+          background-color: #00000080 !important;
+        }
+
+        body, .modal-content, .card, textarea{
+          background-color: #343A40 !important;
         }
 
         .modal-content{
-          border: 2px solid white;
+          border: 1px solid #F8F9FA !important;
         }
         h1,h2,h3,h4,h5,h6,p, table, .col-12, textarea, b{
-          color: #fff;
+          color: #F8F9FA;
         }
       </style> 
       `;
@@ -408,7 +412,7 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
 
       if (!elemento) {
         document.getElementsByTagName('head')[0].innerHTML += style;
-        document.getElementsByClassName('fa-lightbulb')[0].style.color = '#1b1a1a';
+        document.getElementsByClassName('fa-lightbulb')[0].style.color = '#212529';
         localStorage.setItem('darkmode', 'on');
       } else {
         elemento.remove();
@@ -440,7 +444,7 @@ multiplicador @int is 1; loop<vol_multiplicador lessthan 11>` vol_produto @int i
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
-  <script src="core/interface/index.js"></script>
+  <script type="module" src="core/interface/index.js"></script>
 </body>
 
 </html>
