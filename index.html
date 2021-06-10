@@ -10,22 +10,23 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-  crossorigin="anonymous" referrerpolicy="no-referrer" />
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <script src="assets/lib/codemirror/lib/codemirror.js"></script>
   <link rel="stylesheet" href="assets/lib/codemirror/lib/codemirror.css">
   <script src="assets/lib/codemirror/mode/javascript/javascript.js"></script>
-  <link rel="stylesheet" href="assets/lib/codemirror/theme/abcdef.css">
+  <link rel="stylesheet" href="assets/lib/codemirror/theme/mbo.css">
 
   <!-- Definição de fonte -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap" rel="stylesheet">
   <style>
     html,
     body {
       font-family: 'Ubuntu', sans-serif;
-    };
+    }
+
+    ;
   </style>
 
 
@@ -39,7 +40,7 @@
     import { Conteudo } from "./core/engine/models/conteudo.js"
     import codeMirror from "./core/interface/index.js"
 
-    document.getElementById('botaoCompilar').addEventListener('click', () => {
+    document.getElementById('botaoAnalizar').addEventListener('click', () => {
       recuperaCodigoDigitado();
     })
 
@@ -58,13 +59,9 @@
     }
 
     function processaCodigoDigitado(codigoOriginal) {
-
       let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
-
       let codigoEmTokens = identificaTokensEmLinhas(codigoQuebradoEmLinhas, Reservadas.simbolosReservados, Reservadas.palavrasReservadas);
-
       let stringsUnificadas = unificaStringEmToken(codigoEmTokens);
-
       let tokensCategorizados = categorizacaoDeTokens(stringsUnificadas);
 
       exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados);
@@ -119,10 +116,9 @@
       return resultado;
     }
 
-
   </script>
-  <title>Jacscript</title>
 
+  <title>Jacscript</title>
 
 </head>
 
@@ -139,9 +135,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-
-        </div>
+        <div class="modal-body"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
         </div>
@@ -151,12 +145,11 @@
 
   <!-- Header -->
   <div class="container text-center my-3">
-    <i class="fas fa-lightbulb" onclick="toggleDarkMode()"
-      style="font-size: 50px; color: yellow;"></i>
+    <i class="fas fa-lightbulb" id="toggleDarkModeIcon" style="font-size: 50px; color: yellow;"></i>
     <h1>Jacscript</h1>
     <div>
       <p>Linguagem de Programação baseada no <i>TypeScript</i>, sendo uma adaptação de seus
-        paradigmas.deded</p>
+        paradigmas.</p>
     </div>
   </div>
 
@@ -170,7 +163,7 @@
         <div class="card border mb-3" id="entrada" style="max-width: 100%;">
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>Entrada</div>
-            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoCompilar">Analizar</a>
+            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoAnalizar">Analizar</a>
           </div>
           <div class="card-body p-0">
             <textarea id="editor"></textarea>
@@ -211,6 +204,7 @@
 
   <!-- Scripts para exibição do modal -->
   <script>
+
     function exibeDetalhesDeLinhas(codigoQuebradoEmLinhas, titulo) {
       codigoQuebradoEmLinhas = JSON.parse(atob(codigoQuebradoEmLinhas));
       let corpoModal = document.getElementsByClassName('modal-body')[0];
@@ -384,26 +378,31 @@
       linha = linha.replace(';', '&#59');
       return linha
     }
+  </script>
 
+  <script type="module">
+    import codeMirror from "./core/interface/index.js";
 
+    const icon = document.getElementById('toggleDarkModeIcon');
 
     function toggleDarkMode() {
       let style = `
-      
       <style id="darkmode">
         .modal{
           background-color: #00000080 !important;
         }
 
-        body, .modal-content, .card, textarea{
+        body, .modal-content, .card{
           background-color: #343A40 !important;
         }
 
         .modal-content{
           border: 1px solid #F8F9FA !important;
         }
-        h1,h2,h3,h4,h5,h6,p, table, .col-12, textarea, b{
+
+        h1,h2,h3,h4,h5,h6,p, table, .col-12, b, .close{
           color: #F8F9FA;
+          opacity: 1;
         }
       </style> 
       `;
@@ -411,10 +410,14 @@
       let elemento = document.getElementById('darkmode');
 
       if (!elemento) {
+        codeMirror.setOption("theme", "mbo");
+        codeMirror.refresh();
         document.getElementsByTagName('head')[0].innerHTML += style;
         document.getElementsByClassName('fa-lightbulb')[0].style.color = '#212529';
         localStorage.setItem('darkmode', 'on');
       } else {
+        codeMirror.setOption("theme", "default");
+        codeMirror.refresh();
         elemento.remove();
         document.getElementsByClassName('fa-lightbulb')[0].style.color = 'yellow';
         localStorage.setItem('darkmode', 'off');
@@ -425,12 +428,11 @@
       if (localStorage.getItem('darkmode') === 'on') {
         toggleDarkMode();
       }
-
       document.getElementsByTagName('body')[0].style.display = "block";
-
     }
 
     verificaDarkMode();
+    icon.addEventListener('click', toggleDarkMode)
   </script>
 
   <!-- Scripts externos -->
