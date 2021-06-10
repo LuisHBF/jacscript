@@ -1,0 +1,58 @@
+# Programa exemplo
+
+
+output<"digite o número que deseja realizar a tabuada do 1 ao 10: ">;
+vol_multiplicando @int is input<@int>;
+vol_multiplicador @int is 1;
+loop<vol_multiplicador lessthan 11>`
+	vol_produto @int is vol_multiplicando times vol_multiplicador;
+	output<vol_multiplicando | " X " | vol_multiplicador | " = " | vol_produto>;
+	vol_multiplicador is vol_multiplicador plus 1;
+´
+
+# Lista de tokens
+
+
+is
+input
+output
+condition
+otherwise
+loop
+plus
+minus
+times
+by
+greaterthan
+lessthan
+equals
+notequals
+and
+or
+not
+true
+false
+@int
+@flt
+@str
+@bool
+<
+>
+;
+`
+´
+"OLA"
+|
+#
+greaterthan
+lessthan
+equals
+notequals
+and
+or
+not
+plus
+minus
+times
+by
+vol_zeus
