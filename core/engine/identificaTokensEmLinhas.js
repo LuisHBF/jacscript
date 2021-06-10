@@ -13,7 +13,6 @@ export function identificaTokensEmLinhas(linhas, simbolos, palavrasReservadas) {
             removidoEspaco[i] = removidoEspaco[i].split('🤬');
         }
         let removidoVazio = removidoEspaco.flat(Infinity).filter(s => s != '');
-        let codigo = { ...{ code: l.codigo } }.code;
         let lastTokenPosition = 0;
         for (let token of removidoVazio) {
             let codigoJs;
@@ -24,7 +23,6 @@ export function identificaTokensEmLinhas(linhas, simbolos, palavrasReservadas) {
             }
             let posicao = { linha: l.posicao, inicio: lastTokenPosition, fim: lastTokenPosition + token.length - 1 };
             lastTokenPosition += token.length;
-            codigo = codigo.replace(token, '')
 
             tokens.push(new Token(token, codigoJs, posicao, undefined))
         };
