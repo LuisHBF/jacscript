@@ -40,7 +40,7 @@
     import { Conteudo } from "./core/engine/models/conteudo.js"
     import codeMirror from "./core/interface/index.js"
 
-    document.getElementById('botaoAnalizar').addEventListener('click', () => {
+    document.getElementById('botaoAnalisar').addEventListener('click', () => {
       recuperaCodigoDigitado();
     })
 
@@ -163,13 +163,13 @@
         <div class="card border mb-3" id="entrada" style="max-width: 100%;">
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>Entrada</div>
-            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoAnalizar">Analizar</a>
+            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoAnalisar">Analisar</a>
           </div>
           <div class="card-body p-0">
             <textarea id="editor"></textarea>
           </div>
           <div class="card-footer d-flex justify-content-between">
-            <small class="text-muted">Analizador Léxico</small>
+            <small class="text-muted">Analisador Léxico</small>
             <a href="#entrada">subir</a>
           </div>
         </div>
@@ -194,7 +194,7 @@
             </table>
           </div>
           <div class="card-footer">
-            <small class="text-muted">Resultado da Analize</small>
+            <small class="text-muted">Resultado da Analise</small>
           </div>
         </div>
       </div>
