@@ -22,11 +22,11 @@ export const Reservadas = {
     },
     {
       token: 'input',
-      codigoJs: 'INPUT'
+      codigoJs: 'prompt'
     },
     {
       token: 'output',
-      codigoJs: 'OUTPUT'
+      codigoJs: 'alert'
     },
     {
       token: 'condition',

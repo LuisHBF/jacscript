@@ -6,6 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+
+  <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.14.0/js/lib/beautify.js"></script>
+  <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.14.0/js/lib/beautify-css.js"></script>
+  <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.14.0/js/lib/beautify-html.js"></script>
+
   <link rel="stylesheet" href="style/index.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -38,12 +50,17 @@
     import { unificaStringEmToken } from "./core/engine/unificaStringEmToken.js"
     import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
     import { Conteudo } from "./core/engine/models/conteudo.js"
+    import { traduzirTokens } from "./core/engine/tradutor/traduzirTokens.js"
     import codeMirror from "./core/interface/index.js"
+    import codeMirrorTradutor from "./core/interface/tradutor.js"
 
     document.getElementById('botaoAnalisar').addEventListener('click', () => {
       recuperaCodigoDigitado();
-    })
+    });
 
+    document.getElementById('botaoTraduzir').addEventListener('click', () => {
+      traduzCodigoDigitado();
+    });
 
     function recuperaCodigoDigitado() {
       let codigoOriginal = codeMirror.getValue();
@@ -52,7 +69,12 @@
 
     document.getElementById('botaoLimpar').addEventListener('click', () => {
       limparTabela();
-    })
+    });
+
+    document.getElementById('botaoRodar').addEventListener('click', () => {
+      console.log(codeMirrorTradutor.getValue())
+      eval(codeMirrorTradutor.getValue());
+    });
 
     function limparTabela() {
       let exibicao = document.getElementById('exibicao');
@@ -68,7 +90,20 @@
       exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados);
     }
 
+    function traduzCodigoDigitado() {
+      let codigoOriginal = codeMirror.getValue();
+      let codigoQuebradoEmLinhas = identificacaoLinha(codigoOriginal);
+      let codigoEmTokens = identificaTokensEmLinhas(codigoQuebradoEmLinhas, Reservadas.simbolosReservados, Reservadas.palavrasReservadas);
+      let stringsUnificadas = unificaStringEmToken(codigoEmTokens);
+      let tokensCategorizados = categorizacaoDeTokens(stringsUnificadas);
+
+      let codigoTraduzido = traduzirTokens(stringsUnificadas, Reservadas.tiposVariaveis, tokensCategorizados.valores[0]);
+
+      exibeCodigoTraduzido(js_beautify(codigoTraduzido));
+    }
+
     function exibeCodigoProcessado(codigoQuebradoEmLinhas, codigoEmTokens, stringsUnificadas, tokensCategorizados) {
+      trocarAbaOutput(0);
       let exibicao = document.getElementById('exibicao');
       exibicao.innerHTML = '';
       let html = '';
@@ -104,6 +139,11 @@
       });
 
       exibicao.innerHTML = html
+    }
+
+    function exibeCodigoTraduzido(codigo) {
+      trocarAbaOutput(2);
+      codeMirrorTradutor.getDoc().setValue(codigo);
     }
 
     function somaOcorrencias(array, excecao) {
@@ -169,8 +209,7 @@
                 onclick="trocarAbaOutput(0)">Analise Léxica</a>
               <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoSintatica"
                 onclick="trocarAbaOutput(1)">Analise Sintática</a>
-              <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoTraduzir"
-                onclick="trocarAbaOutput(2)">Traduzir</a>
+              <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoTraduzir">Traduzir</a>
             </div>
 
 
@@ -189,7 +228,11 @@
         <div class="card border mb-3" id="saida" style="max-width: 100%;">
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>Saída</div>
-            <button class="btn btn-sm btn-outline-secondary" type="button" id="botaoLimpar">Limpar</button>
+            <div>
+              <button class="btn btn-sm btn-outline-secondary" type="button" id="botaoLimpar">Limpar</button>
+              <button class="btn btn-sm btn-outline-success" type="button" id="botaoRodar">Executar</button>
+            </div>
+            
           </div>
           <div class="card-body p-0" id="outputLexico">
             <table class="table text-center table-sm table-bordered m-0">
@@ -209,7 +252,7 @@
           </div>
 
           <div id="outputTradutor" style="display: none;">
-            oi sou um output tradutor
+            <textarea id="tradutor"></textarea>
           </div>
 
 
@@ -402,6 +445,7 @@
 
   <script type="module">
     import codeMirror from "./core/interface/index.js";
+    import codeMirrorTradutor from "./core/interface/tradutor.js";
 
     const icon = document.getElementById('toggleDarkModeIcon');
 
@@ -432,12 +476,20 @@
       if (!elemento) {
         codeMirror.setOption("theme", "mbo");
         codeMirror.refresh();
+
+        codeMirrorTradutor.setOption("theme", "mbo");
+        codeMirrorTradutor.refresh();
+
         document.getElementsByTagName('head')[0].innerHTML += style;
         document.getElementsByClassName('fa-lightbulb')[0].style.color = '#212529';
         localStorage.setItem('darkmode', 'on');
       } else {
         codeMirror.setOption("theme", "default");
         codeMirror.refresh();
+
+        codeMirrorTradutor.setOption("theme", "default");
+        codeMirrorTradutor.refresh();
+
         elemento.remove();
         document.getElementsByClassName('fa-lightbulb')[0].style.color = 'yellow';
         localStorage.setItem('darkmode', 'off');
