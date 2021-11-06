@@ -3,7 +3,7 @@ import { Linha } from './models/linha.js';
 export function identificacaoLinha(codigo) {
     let arrayDeLinhas = [];
 
-    let codigoSeparadoPorLinhas = codigo.split(/(?<=;)|(?<=`)|(?<=´)/g);
+    let codigoSeparadoPorLinhas = codigo.split('\n');
     let removidoEspaco = codigoSeparadoPorLinhas.map(s => s.trim());
     let removidoLinhasVazias = removidoEspaco.filter(s => s != '');
 
