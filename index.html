@@ -44,6 +44,7 @@
       recuperaCodigoDigitado();
     })
 
+
     function recuperaCodigoDigitado() {
       let codigoOriginal = codeMirror.getValue();
       processaCodigoDigitado(codigoOriginal);
@@ -163,7 +164,16 @@
         <div class="card border mb-3" id="entrada" style="max-width: 100%;">
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>Entrada</div>
-            <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoAnalisar">Analisar</a>
+            <div>
+              <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoAnalisar"
+                onclick="trocarAbaOutput(0)">Analise Léxica</a>
+              <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoSintatica"
+                onclick="trocarAbaOutput(1)">Analise Sintática</a>
+              <a class="btn btn-sm btn-outline-primary" type="button" href="#saida" id="botaoTraduzir"
+                onclick="trocarAbaOutput(2)">Traduzir</a>
+            </div>
+
+
           </div>
           <div class="card-body p-0">
             <textarea id="editor"></textarea>
@@ -181,7 +191,7 @@
             <div>Saída</div>
             <button class="btn btn-sm btn-outline-secondary" type="button" id="botaoLimpar">Limpar</button>
           </div>
-          <div class="card-body p-0">
+          <div class="card-body p-0" id="outputLexico">
             <table class="table text-center table-sm table-bordered m-0">
               <thead>
                 <tr>
@@ -193,6 +203,16 @@
               <tbody id="exibicao"></tbody>
             </table>
           </div>
+
+          <div id="outputSintatico" style="display: none;">
+            oi sou um output sintatico
+          </div>
+
+          <div id="outputTradutor" style="display: none;">
+            oi sou um output tradutor
+          </div>
+
+
           <div class="card-footer">
             <small class="text-muted">Resultado da Analise</small>
           </div>
@@ -433,8 +453,31 @@
 
     verificaDarkMode();
     icon.addEventListener('click', toggleDarkMode)
+
   </script>
 
+  <script>
+    function trocarAbaOutput(indice) {
+      let lexica = document.getElementById("outputLexico");
+      let sintatico = document.getElementById("outputSintatico");
+      let tradutor = document.getElementById("outputTradutor");
+
+      if (indice == 0) {
+        lexica.style.display = "block";
+        sintatico.style.display = "none";
+        tradutor.style.display = "none";
+      } else if (indice == 1) {
+        lexica.style.display = "none";
+        sintatico.style.display = "block";
+        tradutor.style.display = "none";
+      } else {
+        lexica.style.display = "none";
+        sintatico.style.display = "none";
+        tradutor.style.display = "block";
+      }
+
+    }
+  </script>
   <!-- Scripts externos -->
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
