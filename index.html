@@ -51,11 +51,19 @@
     import { categorizacaoDeTokens } from "./core/engine/categorizacaoTokens.js"
     import { Conteudo } from "./core/engine/models/conteudo.js"
     import { traduzirTokens } from "./core/engine/tradutor/traduzirTokens.js"
+    import { efetuaAnaliseSintatica } from "./core/engine/sintatica/efetuaAnaliseSintatica.js"
+
     import codeMirror from "./core/interface/index.js"
     import codeMirrorTradutor from "./core/interface/tradutor.js"
 
+    
     document.getElementById('botaoAnalisar').addEventListener('click', () => {
       recuperaCodigoDigitado();
+    });
+
+    document.getElementById('botaoSintatica').addEventListener('click', () => {
+      let erro = efetuaAnaliseSintatica(codeMirror.getValue());
+      document.getElementById("outputSintatico").innerHTML = erro;
     });
 
     document.getElementById('botaoTraduzir').addEventListener('click', () => {
@@ -218,7 +226,7 @@
             <textarea id="editor"></textarea>
           </div>
           <div class="card-footer d-flex justify-content-between">
-            <small class="text-muted">Analisador Léxico</small>
+            <small class="text-muted">Analisador</small>
             <a href="#entrada">subir</a>
           </div>
         </div>
@@ -230,7 +238,7 @@
             <div>Saída</div>
             <div>
               <button class="btn btn-sm btn-outline-secondary" type="button" id="botaoLimpar">Limpar</button>
-              <button class="btn btn-sm btn-outline-success" type="button" id="botaoRodar">Executar</button>
+              <button class="btn btn-sm btn-outline-success" type="button" id="botaoRodar" style="display: none;">Executar</button>
             </div>
             
           </div>
@@ -513,19 +521,24 @@
       let lexica = document.getElementById("outputLexico");
       let sintatico = document.getElementById("outputSintatico");
       let tradutor = document.getElementById("outputTradutor");
+      let executar = document.getElementById("botaoRodar");
 
       if (indice == 0) {
         lexica.style.display = "block";
         sintatico.style.display = "none";
         tradutor.style.display = "none";
+        botaoRodar.style.display = "none";
+
       } else if (indice == 1) {
         lexica.style.display = "none";
         sintatico.style.display = "block";
         tradutor.style.display = "none";
+        botaoRodar.style.display = "none";
       } else {
         lexica.style.display = "none";
         sintatico.style.display = "none";
         tradutor.style.display = "block";
+        botaoRodar.style.display = "inline-block";
       }
 
     }
